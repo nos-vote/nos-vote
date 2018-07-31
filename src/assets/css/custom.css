@@ -1,0 +1,73 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons");
+@import url("https://use.fontawesome.com/releases/v5.2.0/css/all.css");
+.vote-list-item .text-muted {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+.page-header {
+  background-image: url(../img/bg7.jpg);
+  background-size: cover;
+  background-position: top center;
+  height: 100vh;
+}
+.card-header {
+  padding: 25px !important;
+}
+.card-header h4 {
+  font-size: 18px;
+  margin: 0 !important;
+  line-height: 28px;
+}
+.btn {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 12px;
+}
+.btn-primary {
+  background-image: none;
+}
+.create-vote {
+  margin-bottom: 15px;
+}
+.status-col {
+  width: 20%;
+}
+.card {
+  color: #6c757d !important;
+  font-size: 14px;
+  padding: 15px !important;
+}
+.card-body .far {
+  margin: 0 5px;
+}
+.card-body .fa-smile {
+  color: #29b5a8;
+  font-size: 24px;
+  margin-right: 5px;
+}
+.card-body .fa-frown {
+  color: #e6296a;
+  font-size: 24px;
+}
+.vote-list-item {
+  width: 100%;
+  line-height: 24px;
+  font-size: 14px;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+.card-body .heading {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 0;
+  background: #eee;
+}
+.card .form-control {
+  margin-bottom: 0;
+  height: 41px;
+}
+.vote-list-item .well .progress {
+  margin: 15px 0;
+}
+.vote-list-item .well {
+  margin: 15px 0;
+}
