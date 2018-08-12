@@ -25,7 +25,11 @@ const styles = {
   }
 };
 
-const scriptHash = "312f99d643024e24e0146d731714e7f3ebe8da95"
+//const scriptHash = "312f99d643024e24e0146d731714e7f3ebe8da95"
+//const scriptHash = "ce809cae0f0f2d721f8264dab74b6ce05de7cf36"
+//const scriptHash = "6be4a77a51db2b26ab19939ecca386cbb42b0836"
+//const scriptHash = "640baf8ade98e93307c76be75d9ee67d4817dad9"
+const scriptHash = "bc956a8ef92ee60d44809af55a43d7480a0709a7"
 const known_integer_keys = ["yes_counter", "no_counter"]
 
 class Vote extends React.Component {
@@ -50,6 +54,7 @@ class Vote extends React.Component {
 
  async componentDidMount() {
     var ids = await this.get_all_questions();
+    console.log(JSON.stringify(ids, null, 4))
     var list = []
     console.log("============================= DEBUG =============================")
     var address = await this.props.nos.getAddress()
@@ -59,12 +64,16 @@ class Vote extends React.Component {
     var addr_string = this.hexToString(encoded_address)
     console.log(addr_string)
     console.log("============================= DEBUG =============================")
-    for (var [id, text] of ids) {
-        var q = await this.get_question(id)
+    //for (var [id, text] of ids) {
+    for (var i=0; i<ids.length; i++) {
+        console.log("IN!")
+        var q = await this.get_question(ids[i])
+        console.log(JSON.stringify(ids, null, 4))
         var hasVoted = false
-        for (var [k, v] of q.get("voters")) {
-            console.log(k + ' = ' + v);
-            if ( k == addr_string ) {
+        var voters = q.get("voters")
+        for (var j=0; j<voters.length; j++) {
+            console.log(voters[j]);
+            if ( voters[j] == addr_string ) {
                 hasVoted = true
             }
         }
@@ -111,6 +120,18 @@ class Vote extends React.Component {
         return map
     }
 
+    handleArray = async func => {
+        var result = await func;
+        var deserial = sc.deserialize(result)
+        // DEBUG
+        console.log(JSON.stringify(deserial, null, 4))
+        var array = this.process_array(deserial)
+        for (var i=0; i<array.length; i++) {
+            console.log(array[i]);
+        }
+        return array
+    }
+
     process_map(d) {
         if (d.type != "Map") {
             return null
@@ -130,7 +151,7 @@ class Vote extends React.Component {
         return new_map
     };
 
-process_array(d) {
+    process_array(d) {
         if (d.type != "Array") {
             return null
         }
@@ -163,7 +184,7 @@ process_array(d) {
         return this.props.nos.getStorage({scriptHash, key, encodeInput: enc_in, decodeOutput: dec_out});
     }
 
-// ================ VOTE API ==================
+    // ================ VOTE API ==================
     // ============================================
 
     // get specific question - returns map:
@@ -174,13 +195,22 @@ process_array(d) {
     //  "yes_counter": 0,               (int)
     //  "no_counter": 0 }               (int)
     async get_question(questionId) {
-        var q = await this.handleMap(this.handleStorage(questionId, true, false))
+        var q = await this.handleArray(this.handleStorage(questionId, true, false))
+        console.log(JSON.stringify(q, null, 4))
+
+        var map = new Map()
+        map.set("question_id", q[0])
+        map.set("owner", q[1])
+        map.set("question", q[2])
+        map.set("voters", q[3])
+        map.set("yes_counter", parseInt(q[4], 16))
+        map.set("no_counter", parseInt(q[5], 16))
+
         // DEBUG
-        for (var [key, value] of q) {
+        for (var [key, value] of map) {
           console.log(key + ' = ' + value);
         }
-        console.log(JSON.stringify(q, null, 4))
-        return q
+        return map
     }
 
     // get total number of yes votes - returns int
@@ -204,11 +234,14 @@ process_array(d) {
 // get all questions - returns map:
     // {"questionID" : "question"}      (string)
     async get_all_questions() {
-        var q = await this.handleMap(this.handleStorage("GET_ALL_QUESTIONS", true, false))
+        console.log("get_all_questions()")
+        var q = await this.handleArray(await this.handleStorage("GET_ALL_QUESTIONS", true, false))
+        console.log("DEBUG GET ALL QUESTIONS!!!!!!!!!!!!!!!!!!!")
+        console.log(JSON.stringify(q, null, 4))
         // DEBUG
-        for (var [key, value] of q) {
-          console.log(key + ' = ' + value);
-        }
+      //for (var [key, value] of q) {
+      //  console.log(key + ' = ' + value);
+      //}
         return q
     }
 
@@ -508,3 +541,4 @@ Vote.propTypes = {
 };
 
 export default injectNOS(injectSheet(styles)(Vote));
+
